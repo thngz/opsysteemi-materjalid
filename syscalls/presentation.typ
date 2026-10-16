@@ -1,6 +1,8 @@
 #import "@preview/polylux:0.4.0": *
 
-#set page(paper: "presentation-16-9")
+#set page(paper: "presentation-16-9", footer: align(right, text(size: 14pt)[
+  #toolbox.slide-number / #toolbox.last-slide-number
+]))
 #set text(size: 20pt, font: "Iosevka Extended")
 #set list(
   spacing: 1em, // vertical gap between items
@@ -115,7 +117,7 @@
       - 1 -> on võimalik käivitada privileegrežiimi käsk
       - 0 -> pole võimalik käivitada privileegrežiimi käsku
   - Tarkvaraline lahendus
-      - Katkestused
+    - Katkestused
 ]
 
 #slide[
@@ -125,9 +127,12 @@
     - Riistvara kasutab seda protsessoriga suhtlemisel
     - Protsessor täidab järjest oma ülesannet käsk-käsu haaval: @interrupt
   ][
-    #figure(image("figure4.png", height: 60%), caption: [Katkestuseta protsessori töövoog @Lecture11Interrupts])<interrupt>
+    #figure(
+      image("figure4.png", height: 60%),
+      caption: [Katkestuseta protsessori töövoog @Lecture11Interrupts],
+    )<interrupt>
   ]
-  
+
   #toolbox.side-by-side(columns: (auto, auto))[
     + Katkestuse puhul salvestab protsessor praeguse ülesande täitmise oleku
     + Protsessor hakkab täitma katkestustäituri (interrupt handler) käske
