@@ -96,10 +96,10 @@
     - Tulemüür
     - Failisüsteem
   - Viga privileegrežiimis
-      - "With great power comes great responsibility"
-      - Kood jookseb ühtses mälu aadressiruumis
-        - Privileegrežiimis jooksev programm võib kogemata kirjutada valesse mäluaadressisse
-      - Süsteemiülene krahh
+    - "With great power comes great responsibility"
+    - Kood jookseb ühtses mälu aadressiruumis
+      - Privileegrežiimis jooksev programm võib kogemata kirjutada valesse mäluaadressisse
+    - Süsteemiülene krahh
 ]
 #slide[
   #figure(
@@ -109,9 +109,39 @@
 ]
 
 #slide[
-  == #problem[Kuidas takistada protsesse võtmast privileegrežiimi?]
+  == #problem[Kuidas takistada suvalisi protsesse võtmast privileegrežiimi?]
   - Riistvaraline lahendus
-    - Protsessoris sisse ehitatud register (mode bit)
+    - Kui protsessorisse sisse ehitatud spetsiaalse registri (mode bit) väärtus on
+      - 1 -> on võimalik käivitada privileegrežiimi käsk
+      - 0 -> pole võimalik käivitada privileegrežiimi käsku
+  - Tarkvaraline lahendus
+      - Katkestused
+]
+
+#slide[
+  == Katkestustest (interrupts) lühidalt
+  #toolbox.side-by-side(columns: (auto, auto))[
+    - Viis kuidas ajutiselt panna protsessor täitma mõnda muud ülesannet
+    - Riistvara kasutab seda protsessoriga suhtlemisel
+    - Protsessor täidab järjest oma ülesannet käsk-käsu haaval: @interrupt
+  ][
+    #figure(image("figure4.png", height: 60%), caption: [Katkestuseta protsessori töövoog @Lecture11Interrupts])<interrupt>
+  ]
+  
+  #toolbox.side-by-side(columns: (auto, auto))[
+    + Katkestuse puhul salvestab protsessor praeguse ülesande täitmise oleku
+    + Protsessor hakkab täitma katkestustäituri (interrupt handler) käske
+    + Protsessor loeb sisse varasemalt salvestatud oleku
+    + Protsessor jätkab ülesande täitmist
+  ][
+    #figure(image("figure5.png", height: 70%), caption: [Protsessori töövoog katkestusega @Lecture11Interrupts])
+  ]
+]
+
+#slide[
+  == Katkestuste roll mode bit väärtuse vahetamisel
+  - Katkestustäituri käskude täitmise ajal muutub mode-bit automaatselt 1
+  - Katkestuse
 ]
 
 #slide[
