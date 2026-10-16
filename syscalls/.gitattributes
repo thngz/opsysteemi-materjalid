@@ -1,1 +1,2 @@
 figure1.png filter=lfs diff=lfs merge=lfs -text
+figure2.webp filter=lfs diff=lfs merge=lfs -text
