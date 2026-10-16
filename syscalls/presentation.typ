@@ -52,8 +52,8 @@
 #slide[
   == #problem[Kuidas takistada kasutaja protsesse?]
   - Protsessid mis võivad näiteks:
-    - Takistada teistel protsessidel ligipääsu saamist
-    - Lugeda ükskõik kelle faile
+    - Takistada teistel protsessidel riistvarale ligipääsu saamist
+    - Lugeda ükskõik mis faile
     - Sulgeda süsteemseid protsesse
 ]
 
@@ -77,19 +77,60 @@
 ]
 
 #slide[
-  == Kasutajarežiim
+  == Kasutajarežiim (user mode)
+  - Jooksevad tavalised protsessid
+    - brauser
+    - mängud
+    - terminal
+    - kasutajaliides
+  - Puudub võimalus:
+    - Lugeda teiste protsesside mälu
+    - Otse ligi saada riistvarale
+  - Viga kasutajarežiimis: Konkreetne protsess sureb
 ]
 
 #slide[
-  == Privileegrežiim
+  == Privileegrežiim (kernel mode)
+  - Jooksevad süsteemi toimimiseks vajalikud protsessid
+    - Draiverid
+    - Tulemüür
+    - Failisüsteem
+  - Viga privileegrežiimis
+      - "With great power comes great responsibility"
+      - Kood jookseb ühtses mälu aadressiruumis
+        - Privileegrežiimis jooksev programm võib kogemata kirjutada valesse mäluaadressisse
+      - Süsteemiülene krahh
+]
+#slide[
+  #figure(
+    image("figure3.jpg"),
+    caption: "Potentsiaalne viga privileegrežiimis",
+  )
 ]
 
 #slide[
   == #problem[Kuidas takistada protsesse võtmast privileegrežiimi?]
+  - Riistvaraline lahendus
+    - Protsessoris sisse ehitatud register (mode bit)
 ]
 
 #slide[
-  == #problem[Kuidas siis protsessid saavad ligi riistvarale]
+  == #problem[Kuidas siis protsessid saavad ligi riistvarale?]
+
+  Süsteemikutsed
+]
+
+#slide[
+  == Kuidas süsteemikutsed töötavad
+]
+
+#slide[
+  == Miks ei saa Windowsi programmi jooksutada Linuxi peal
+  - Suur põhjus: Windowsi ja Linux operatsioonisüsteemide süsteemikutsed erinevad
+  - Lahendused:
+    - Võimalik konverteerida ühe platvormi süsteemikutsed teise omadeks
+      - Mõned projektid: Wine @WineHQRunWindows
+      - WSL (Window's subsystem for Linux v1)
 ]
 
 #slide[
@@ -106,7 +147,7 @@
 
 #slide[
   #set text(size: 15pt)
-  #bibliography("./references.bib")
+  #bibliography("./references.bib", full: true)
 ]
 
 #slide[
