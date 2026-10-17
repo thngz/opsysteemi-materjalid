@@ -27,12 +27,6 @@
 ]
 
 #slide[
-  #set align(center + horizon)
-  #set text(size: 25pt)
-  Kuidas anda käsklusi operatsioonisüsteemile?
-]
-
-#slide[
   == Meeldetuletus: Operatsioonisüsteem kui orkestraator
   #figure(
     image("./figure1.png", height: 65%),
@@ -54,7 +48,7 @@
 #slide[
   == #problem[Kuidas takistada protsesse?]
   - Protsessid võivad näiteks:
-    - Takistada teistel protsessidel riistvarale ligipääsu saamist
+    - Piirata teistel protsessidel riistvarale ligipääsu saamist
     - Lugeda kõiki faile
     - Sulgeda süsteemseid protsesse
 ]
@@ -329,17 +323,14 @@
   Operatsioonisüsteemi standardteek abstraheerib süsteemikutsed lihtsasti kasutatavate funktsioonide taha
 ]
 
-#slide[
-  #figure(
-    image("./figure6.png", height: 75%),
-    caption: "Operatsioonisüsteem kui orkestraator",
-  )
-]
 
 
 
 #slide[
   == Süsteemikutsete plussid
+  - Riistvara on kasutajaprotsesside jaoks abstraheeritud
+  - Turvalisus
+    - Kasutajaprotsessid ei saa oma suva järgi riistvarale ligi
 ]
 
 #slide[
@@ -347,19 +338,88 @@
 
   - Jõudluseprobleemid
     - Iga süsteemikutse sunnib protsessorit tegema kontekstivahetust
+    - Sõltuvus konkreetsest platvormist
+      - Erinevad platvormid võivad teha oma API
 ]
 
 #slide[
-  == Miks ei saa Windowsi programmi jooksutada Linuxi peal
-  - Suur põhjus: Windowsi ja Linux operatsioonisüsteemide süsteemikutsed erinevad
-  - Lahendused:
-    - Võimalik konverteerida ühe platvormi süsteemikutsed teise omadeks
-      - Mõned projektid: Wine @WineHQRunWindows
-      - WSL (Window's subsystem for Linux v1)
+  #figure(
+    image("./figure6.png", height: 75%),
+    caption: "Operatsioonisüsteem kui orkestraator",
+  )
+]
+
+#slide[
+  == Sõltuvus konkreetsest platvormist
+  - Kaks identset arvutit:
+    - Üks Windows
+    - Teine Linux
+  - Kas programm, mis kompileerub Windowsil kompileerub ka Linuxil?
+  #only("2-")[- Ei. Aga miks, kui protsessor on sama?]
+  // - Lahendused:
+  //   - Võimalik konverteerida ühe platvormi süsteemikutsed teise omadeks
+  //     - Mõned projektid: Wine @WineHQRunWindows
+  //     - WSL (Window's subsystem for Linux v1)
+]
+
+#slide[
+  == Mis on sama, mis on erinev?
+  - Sama: protsessori käsud (`mov`, `add`, `jmp`, ...)
+    - Puhtad arvutused töötaksid mõlemal ühtemoodi
+  - Erineb kõik, mis vajab operatsioonisüsteemi:
+    - Süsteemikutsed (nimed, numbrid, argumendid)
+    - Programmifaili formaat: PE (`.exe`) vs ELF
+    - Teegid: `kernel32.dll` vs `libc.so`
+]
+
+#slide[
+  == Süsteemikutsed Windowsil ja Linuxil
+  #figure(
+    image("figure7.jpg", height: 80%),
+    caption: [Windowsi vs Unixi süsteemikutsed @OperatingSystemsStructures],
+  )
+]
+
+#slide[
+  == Kas programm, mis kompileerub macOS-il kompileerub ka Linuxil?
+  #only("2-")[- Üldiselt küll, miks?]
 ]
 
 #slide[
   == POSIX
+  - #strong[P]ortable #strong[O]perating #strong[S]ystem #strong[I]nterface
+  - IEEE standard operatsioonisüsteemidele
+    - Ühised funktsioonid
+      - C funktsioonid: `open`, `read`
+      - Käsurida ja tööriistad: `sh`, `ls`, `grep`
+      - Failide õigused
+      ...
+]
+
+#slide[
+  == POSIX
+  - Lähtekoodi (C) tasemel leping
+    - Sama kood kompileerub Linuxil ja macOS-il
+    - NB! Kompileeritud programm töötab ainult ühel neist
+    - POSIXiga ühilduvad operatsioonisüsteemid:
+      - macOS, Linux, FreeBSD
+    - Windows ei ole POSIX ühilduv
+]
+
+#slide[
+  == Ühilduvuskihid
+  #set text(size: 17pt)
+  #table(
+    columns: (auto, auto, auto),
+    inset: 0.5em,
+    stroke: none,
+    table.header([*Kiht*], [*Mis jookseb kus*], [*Mida tõlgib*]),
+    table.hline(),
+    [Wine / Proton], [Windows → Linux], [Windowsi teegid (`kernel32.dll`, `ntdll.dll`)],
+    [WSL1], [Linux → Windows], [Linuxi süsteemikutsed Windowsi kernelis],
+    [Darling], [macOS → Linux], [macOS-i teegid ja süsteemikutsed],
+    [Cygwin / MSYS2], [POSIX → Windows], [POSIX funktsioonid Win32 peale (lähtekood)],
+  )
 ]
 
 #slide[
@@ -389,7 +449,7 @@
     - Kolmanda osapoole protsess saab ligi kõikidele arvutiga ühenduses olevatele seadmetele (kaamera, mikrofon)
     - Suletud lähtekood, puudub auditeerimisvõimalus
   - Turvalisus
-      - Mis juhtub, kui häkkerid sellisele tarkvarale ligi saavad?
+    - Mis juhtub, kui häkkerid sellisele tarkvarale ligi saavad?
 ]
 
 
