@@ -128,11 +128,11 @@
     - Draiverid
     - Tulemüür
     - Failisüsteem
+    - Teatavad viirusetõrjed/anticheat mootorid
   - Viga privileegrežiimis
     - "With great power comes great responsibility"
     - Kood jookseb ühtses mälu aadressiruumis
       - Privileegrežiimis jooksev programm võib kogemata kirjutada valesse mäluaadressisse
-    - Süsteemiülene krahh
 ]
 #slide[
   #figure(
@@ -221,6 +221,22 @@
 ]
 
 #slide[
+  == Süsteemikutsed
+  - Linuxis umbes 467 erinevat süsteemikutset @SearchableLinuxSyscall
+  #set text(size: 15pt)
+  - Failidega opereerimiseks
+    - `read`
+    - `write`
+    - `open`
+    - `mkdir`
+  - Protsesside haldus
+    - `fork`
+    - `kill`
+    - `exit`
+  - Lisainfo saamiseks Linuxi peal: ```bash man 2 syscalls```
+]
+
+#slide[
   == #problem[Süsteemikutsete otsene kasutamine]
   - Soov kuvada numbrit ekraanil
   - `write` süsteemikutse @Write2LinuxManual
@@ -261,9 +277,9 @@
   == Lahendus: operatsioonisüsteemi standardteegid (standard library)
   - Programmeerija võimsaim tööriist: abstraktsioon
   - "Usually,
-       system calls are not invoked directly: instead, most system calls
-       have corresponding C library wrapper functions which perform the
-       steps required @Intro2LinuxManual"
+    system calls are not invoked directly: instead, most system calls
+    have corresponding C library wrapper functions which perform the
+    steps required @Intro2LinuxManual"
   - Operatsioonisüsteemi standardteek (standard library)
     - Linux: libc
     - Windows: Windows API
@@ -321,15 +337,6 @@
 ]
 
 
-#slide[
-  == Mõned levinumad süsteemikutsed
-
-  `fork`
-  `open`
-  `write`
-  `kill`
-  `exit`
-]
 
 #slide[
   == Süsteemikutsete plussid
@@ -337,6 +344,9 @@
 
 #slide[
   == Süsteemikutsete miinused
+
+  - Jõudluseprobleemid
+    - Iga süsteemikutse sunnib protsessorit tegema kontekstivahetust
 ]
 
 #slide[
@@ -353,8 +363,35 @@
 ]
 
 #slide[
-  == Vanguard
+  == Varia: Tarkvara privileegrežiimis
+  - Rootkit
+  - Vanguard anticheat mootor
+    - Privileegrežiimis jooksev anticheat
+    - Jookseb pidevalt taustal alates arvuti töölepanemisest
+  - CrowdStrike viirusetõrje
+    - Privileegrežiimis suudab viirusetõrje
+      - Uurida ühendatud seadmeid
+      - Uurida teiste protsesside mälu
 ]
+
+#slide[
+  == Probleemid tarkvaraga privileegrežiimis
+  - https://en.wikipedia.org/wiki/2024_CrowdStrike-related_IT_outages
+
+
+    "On 19 July 2024, the American cybersecurity company CrowdStrike distributed a faulty update to its Falcon Sensor security software that caused widespread problems with Microsoft Windows computers running the software. As a result, roughly 8.5 million systems crashed and were unable to properly restart[1] in what has been called the largest outage in the history of information technology[2] and "historic in scale".[3]"
+]
+
+#slide[
+  == Probleemid tarkvaraga privileegrežiimis
+  - Privaatsus
+    - Kolmanda osapoole protsess saab lugeda kõikide protsesside mälu
+    - Kolmanda osapoole protsess saab ligi kõikidele arvutiga ühenduses olevatele seadmetele (kaamera, mikrofon)
+    - Suletud lähtekood, puudub auditeerimisvõimalus
+  - Turvalisus
+      - Mis juhtub, kui häkkerid sellisele tarkvarale ligi saavad?
+]
+
 
 #slide[
   #set text(size: 15pt)
