@@ -142,7 +142,7 @@
 ]
 
 #slide[
-  == #problem[Kuidas takistada suvalisi protsesse võtmast privileegrežiimi?]
+  == #problem[Kuidas takistada suvalisi protsesse minemast privileegrežiimi?]
   - Riistvaraline lahendus
     - Kui protsessorisse sisse ehitatud spetsiaalse registri (mode bit) väärtus on
       - 1 -> on võimalik käivitada privileegrežiimi käsk
@@ -184,13 +184,97 @@
 ]
 
 #slide[
-  == #problem[Kuidas siis protsessid saavad ligi riistvarale?]
-  - Ilma riistvara ligipääsuta protsessid ei ole kuigi kasulikud
-  - Idee: Anda võimalus kasutajarežiimis töötavatele programmidele saada piiratud kujul ligipääs riistvarale
+  == #problem[Kuidas siis protsessid kasutaja protsessid üldse midagi teha saavad?]
+  - Idee: Anda võimalus kasutajarežiimis töötavatele programmidele saada piiratud kujul ligipääs privileegrežiimi funktsionaalsustele
     - Kasutajaprotsessid saavad kutsuda ainult kindlaid funktsioone
       - Kindlad sisendid
       - Kindel väljund
     - Operatsioonisüsteem kontrollib, kas funktsiooni saab käivitada või mitte
+]
+
+#slide[
+  == Süsteemikutsed
+  - Annavad kasutajaprotsessidele ligipääsu privileegrežiimi funktsioonidele
+  - Defineerivad lepingu kasutajaprotsesside ja operatsioonisüsteemi vahel
+  - Kasutajaprotses palub operatsioonisüsteemil tegeleda ise riistvara ja privileegrežiimi käskudega
+    - Operatsioonisüsteem tagastab vastuse
+]
+
+#slide[
+  == Süsteemikutsed
+
+  #set text(size: 15pt)
+  - Rakendusliides (API) operatsioonisüsteemi ja kasutajaprotsesside vahel
+    - Leping
+      - Funktsioon @Open2LinuxManual
+        ```c // The open() system call opens the file specified by path
+        int open(const char *path, int flags, ...  );```
+      - Sisend(id)
+        - ```c const char *path, int flags```
+      - Väljund(id)
+        - ```c /* The return value of open() is a file descriptor, a small,
+          nonnegative integer that is an index to an entry in the process's
+          table of open file descriptors */```
+]
+
+#slide[
+  == #problem[Süsteemikutsete otsene kasutamine]
+  - Soov kuvada numbrit ekraanil
+  - `write` süsteemikutse @Write2LinuxManual
+    - ```c /*write() writes up to count bytes from the buffer starting at buf
+       to the file referred to by the file descriptor fd. */
+       ssize_t write(size_t count;
+                     int fd, const void buf[count], size_t count);
+       ```
+]
+
+
+#slide[
+  == Operatsioonisüsteemi standardteegid (standard library)
+  - Operatsioonisüsteemi standardteek (standard library)
+    - Linux: libc
+    - Windows: Windows API
+]
+
+#slide[
+  #show raw.where(block: true): set text(size: 12pt)
+
+  #toolbox.side-by-side(columns: (1fr, 1fr))[
+    #figure(
+      ```c
+      #include <unistd.h>
+
+      int main(void) {
+          int x = 42;
+          char buf[16];
+          int i = sizeof buf;
+
+          buf[--i] = '\n';
+          do {
+              buf[--i] = '0' + x % 10;
+              x /= 10;
+          } while (x > 0);
+
+          write(1, "Vastus: ", 8);
+          write(1, buf + i, sizeof buf - i);
+      }
+      ```,
+      caption: [Numbri kuvamine `write` süsteemikutsega],
+    )
+  ][
+    #figure(
+      ```c
+      #include <stdio.h>
+
+      int main(void) {
+          int x = 42;
+          printf("Vastus: %d\n", x);
+      }
+      ```,
+      caption: [Standardteegiga],
+    )
+  ]
+
 ]
 
 
@@ -205,6 +289,14 @@
 ]
 
 #slide[
+  == Süsteemikutsete plussid
+]
+
+#slide[
+  == Süsteemikutsete miinused
+]
+
+#slide[
   == Miks ei saa Windowsi programmi jooksutada Linuxi peal
   - Suur põhjus: Windowsi ja Linux operatsioonisüsteemide süsteemikutsed erinevad
   - Lahendused:
@@ -214,7 +306,11 @@
 ]
 
 #slide[
-  == libC ja Windows32.h
+  == POSIX
+]
+
+#slide[
+  == Vanguard
 ]
 
 #slide[
