@@ -52,10 +52,10 @@
 ]
 
 #slide[
-  == #problem[Kuidas takistada kasutaja protsesse?]
-  - Protsessid mis võivad näiteks:
+  == #problem[Kuidas takistada protsesse?]
+  - Protsessid võivad näiteks:
     - Takistada teistel protsessidel riistvarale ligipääsu saamist
-    - Lugeda ükskõik mis faile
+    - Lugeda kõiki faile
     - Sulgeda süsteemseid protsesse
 ]
 
@@ -63,32 +63,63 @@
   == Protsessori režiimid
   - Idee: Eraldame tavalistele protsessidele ja operatsioonisüsteemile eraldi "tsoonid"
     - Kasutajarežiim
-      - Piiratud hulk protsessori käske
+      - Piiratud hulk protsessori käske (`mov`, `jmp` ...)
     - Privileegrežiim
-      - Piiramatu hulk protsessori käske
+      - Ligipääs laiemale hulgale käskudele (`cli`, `hlt`)
   - Tavalised protsessid saavad opereerida ainult kasutajarežiimis
   - Võib-olla ka rohkem režiime!
 ]
 
 #slide[
   == Protsessori režiimid
-  #figure(
-    image("figure2.webp", height: 75%),
-    caption: [Tavaliselt kujutatakse protsessori režiime ringidega  @ProtectionRingsMost],
-  )
-]
 
+  #toolbox.side-by-side(columns: (auto, auto))[
+    #figure(
+      image("figure2.webp", height: 50%),
+    )
+  ][
+    #figure(
+      image("figure2.1.webp", height: 50%),
+    )
+
+  ]
+  Tavaliselt kujutatakse protsessori režiime ringidega @ProtectionRingsMost @UploadwikimediaorgWikipediaCommons
+]
 #slide[
   == Kasutajarežiim (user mode)
   - Jooksevad tavalised protsessid
-    - brauser
-    - mängud
-    - terminal
-    - kasutajaliides
+    - Brauser
+    - Mängud
+    - Terminal
+    - Kasutajaliides
   - Puudub võimalus:
     - Lugeda teiste protsesside mälu
     - Otse ligi saada riistvarale
   - Viga kasutajarežiimis: Konkreetne protsess sureb
+]
+
+#slide[
+  #set align(horizon)
+  #toolbox.side-by-side(columns: (1fr, auto, 1fr))[
+    #figure(
+      ```c
+      int main() {
+          asm volatile("cli");
+      }
+      ```,
+    )
+  ][
+    #text(size: 40pt)[→]
+  ][
+    #figure(
+      ```
+      Program terminated by signal SIGSEGV (Address boundary error)
+      ```,
+    )
+  ]
+
+  #set align(horizon + center)
+  Privileegrežiimi käsk kasutajarežiimis
 ]
 
 #slide[
@@ -116,12 +147,11 @@
     - Kui protsessorisse sisse ehitatud spetsiaalse registri (mode bit) väärtus on
       - 1 -> on võimalik käivitada privileegrežiimi käsk
       - 0 -> pole võimalik käivitada privileegrežiimi käsku
-  - Tarkvaraline lahendus
-    - Katkestused
+  - Katkestused (interrupts)
 ]
 
 #slide[
-  == Katkestustest (interrupts) lühidalt
+  == Katkestustest lühidalt
   #toolbox.side-by-side(columns: (auto, auto))[
     - Viis kuidas ajutiselt panna protsessor täitma mõnda muud ülesannet
     - Riistvara kasutab seda protsessoriga suhtlemisel
@@ -144,19 +174,34 @@
 ]
 
 #slide[
-  == Katkestuste roll mode bit väärtuse vahetamisel
-  - Katkestustäituri käskude täitmise ajal muutub mode-bit automaatselt 1
-  - Katkestuse
+  == Tarkvaraline lahendus
+  - Katkestustäituri käskude täitmise ajal, seatakse mode-bit väärtus automaatselt 1
+  - Katkestustäiturite aadressid ja käsud operatsioonisüsteemi kontrolli all
+    - Tavalised protsessid ei saa muuta
+      - Katkestustäiturite käske
+      - Aadresseid mälus
+    - Säilib operatsioonisüsteemi kontroll privileegrežiimi üle
 ]
 
 #slide[
   == #problem[Kuidas siis protsessid saavad ligi riistvarale?]
-
-  Süsteemikutsed
+  - Ilma riistvara ligipääsuta protsessid ei ole kuigi kasulikud
+  - Idee: Anda võimalus kasutajarežiimis töötavatele programmidele saada piiratud kujul ligipääs riistvarale
+    - Kasutajaprotsessid saavad kutsuda ainult kindlaid funktsioone
+      - Kindlad sisendid
+      - Kindel väljund
+    - Operatsioonisüsteem kontrollib, kas funktsiooni saab käivitada või mitte
 ]
 
+
 #slide[
-  == Kuidas süsteemikutsed töötavad
+  == Mõned levinumad süsteemikutsed
+
+  `fork`
+  `open`
+  `write`
+  `kill`
+  `exit`
 ]
 
 #slide[
@@ -166,6 +211,10 @@
     - Võimalik konverteerida ühe platvormi süsteemikutsed teise omadeks
       - Mõned projektid: Wine @WineHQRunWindows
       - WSL (Window's subsystem for Linux v1)
+]
+
+#slide[
+  == libC ja Windows32.h
 ]
 
 #slide[
