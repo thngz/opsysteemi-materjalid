@@ -197,7 +197,10 @@
   - Annavad kasutajaprotsessidele ligipääsu privileegrežiimi funktsioonidele
   - Defineerivad lepingu kasutajaprotsesside ja operatsioonisüsteemi vahel
   - Kasutajaprotses palub operatsioonisüsteemil tegeleda ise riistvara ja privileegrežiimi käskudega
-    - Operatsioonisüsteem tagastab vastuse
+    - Katkestused
+      - `int 0x80`, `iretq`
+      - `syscall`, `sysret`
+    - Operatsioonisüsteem tagastab tulemuse või veakoodi
 ]
 
 #slide[
@@ -222,15 +225,45 @@
   - Soov kuvada numbrit ekraanil
   - `write` süsteemikutse @Write2LinuxManual
     - ```c /*write() writes up to count bytes from the buffer starting at buf
-       to the file referred to by the file descriptor fd. */
-       ssize_t write(size_t count;
-                     int fd, const void buf[count], size_t count);
-       ```
+      to the file referred to by the file descriptor fd. */
+      ssize_t write(size_t count;
+                    int fd, const void buf[count], size_t count);
+      ```
+]
+
+#slide[
+  #figure(
+    ```c
+    #include <unistd.h>
+
+    int main() {
+        int x = 42;
+        char buf[16];
+        int i = sizeof buf;
+
+        buf[--i] = '\n';
+        do {
+            buf[--i] = '0' + x % 10;
+            x /= 10;
+        } while (x > 0);
+
+        write(1, "Vastus: ", 8);
+        write(1, buf + i, sizeof buf - i);
+    }
+    ```,
+    caption: [Numbri kuvamine `write` süsteemikutsega],
+  )
+
 ]
 
 
 #slide[
-  == Operatsioonisüsteemi standardteegid (standard library)
+  == Lahendus: operatsioonisüsteemi standardteegid (standard library)
+  - Programmeerija võimsaim tööriist: abstraktsioon
+  - "Usually,
+       system calls are not invoked directly: instead, most system calls
+       have corresponding C library wrapper functions which perform the
+       steps required @Intro2LinuxManual"
   - Operatsioonisüsteemi standardteek (standard library)
     - Linux: libc
     - Windows: Windows API
@@ -239,7 +272,7 @@
 #slide[
   #show raw.where(block: true): set text(size: 12pt)
 
-  #toolbox.side-by-side(columns: (1fr, 1fr))[
+  #toolbox.side-by-side(columns: (1fr, auto, 1fr))[
     #figure(
       ```c
       #include <unistd.h>
@@ -259,8 +292,10 @@
           write(1, buf + i, sizeof buf - i);
       }
       ```,
-      caption: [Numbri kuvamine `write` süsteemikutsega],
     )
+  ][
+
+    #text(size: 40pt)[→]
   ][
     #figure(
       ```c
@@ -271,10 +306,18 @@
           printf("Vastus: %d\n", x);
       }
       ```,
-      caption: [Standardteegiga],
     )
   ]
 
+  #set align(horizon + center)
+  Operatsioonisüsteemi standardteek abstraheerib süsteemikutsed lihtsasti kasutatavate funktsioonide taha
+]
+
+#slide[
+  #figure(
+    image("./figure6.png", height: 75%),
+    caption: "Operatsioonisüsteem kui orkestraator",
+  )
 ]
 
 
@@ -311,18 +354,6 @@
 
 #slide[
   == Vanguard
-]
-
-#slide[
-  == Teemade ülevaade
-
-  - Meeldetuletus: Operatsioonisüsteem kui orkestraator
-  - Operatsioonisüsteemi turvalisus
-  - Süsteemikutsed
-    - Kuidas töötavad
-    - Erinevad süsteemikutsed
-
-  - Miks ei tööta sama kood Windowsi peal samamoodi nagu Linuxi peal
 ]
 
 #slide[
