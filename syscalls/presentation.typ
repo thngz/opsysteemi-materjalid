@@ -118,6 +118,28 @@
   - Viga kasutajarežiimis: Konkreetne protsess sureb
 ]
 
+
+#slide[
+  == Privileegrežiim (kernel mode)
+  - Jooksevad süsteemi toimimiseks vajalikud protsessid
+    - Draiverid
+    - Tulemüür
+    - Failisüsteem
+    - Teatavad viirusetõrjed/anticheat mootorid
+  - Viga privileegrežiimis
+    - "With great power comes great responsibility"
+    - Kood jookseb ühtses mälu aadressiruumis
+      - Privileegrežiimis jooksev programm võib kirjutada valesse kohta mälus
+]
+
+#slide[
+  #figure(
+    image("figure3.jpg"),
+    caption: "Potentsiaalne viga privileegrežiimis",
+  )
+]
+
+
 #slide[
   #set align(horizon)
   #toolbox.side-by-side(columns: (1fr, auto, 1fr))[
@@ -140,25 +162,6 @@
 
   #set align(horizon + center)
   Privileegrežiimi käsk kasutajarežiimis
-]
-
-#slide[
-  == Privileegrežiim (kernel mode)
-  - Jooksevad süsteemi toimimiseks vajalikud protsessid
-    - Draiverid
-    - Tulemüür
-    - Failisüsteem
-    - Teatavad viirusetõrjed/anticheat mootorid
-  - Viga privileegrežiimis
-    - "With great power comes great responsibility"
-    - Kood jookseb ühtses mälu aadressiruumis
-      - Privileegrežiimis jooksev programm võib kirjutada valesse kohta mälus
-]
-#slide[
-  #figure(
-    image("figure3.jpg"),
-    caption: "Potentsiaalne viga privileegrežiimis",
-  )
 ]
 
 #slide[
