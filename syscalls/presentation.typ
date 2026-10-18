@@ -53,14 +53,16 @@
 
 #slide[
   == Meeldetuletus: Operatsioonisüsteem kui dirigent
-  - Turvalise keskkonna tagamiseks
-    - Jagab operatsioonisüsteem riistvara ligipääsu protsessidele
-    - Kontrollib operatsioonisüsteem protsesside õiguseid teatud toiminguteks
-    - Isoleerib protsessid üksteisest
-  #figure(
-    image("figure_os_orchestrator_1.png", height: 55%),
-    caption: "Operatsioonisüsteem dirigeerib protsesside ligipääsu riistvarale",
-  )
+  #toolbox.side-by-side(columns: (auto, auto))[
+    - Turvalise keskkonna tagamiseks operatsioonisüsteem:
+      - Jagab riistvara ligipääsu protsessidele
+      - Kontrollib protsesside õiguseid teatud toiminguteks
+      - Isoleerib protsessid üksteisest
+  ][
+    #figure(
+      image("figure_os_orchestrator_1.png", height: 40%),
+    )
+  ]
 ]
 
 
@@ -72,7 +74,7 @@
   ][
     #figure(
       image("figure_fetch-execute-cycle.png", height: 65%),
-      caption: [Protsessori käsutsükkel @Basics2023]
+      caption: [Protsessori käsutsükkel @Basics2023],
     )
   ]
 ]
@@ -150,7 +152,7 @@
   - Viga privileegrežiimis
     - "With great power comes great responsibility"
     - Kood jookseb ühtses mälu aadressiruumis
-      - Privileegrežiimis jooksev programm võib kogemata kirjutada valesse mäluaadressisse
+      - Privileegrežiimis jooksev programm võib kirjutada valesse kohta mälus
 ]
 #slide[
   #figure(
@@ -160,12 +162,14 @@
 ]
 
 #slide[
-  == #problem[Kuidas takistada kasutajarežiimi protsesse minemast privileegrežiimi?]
+  == #problem[Kuidas siseneda privileegrežiimi?]
   - Riistvaraline lahendus
-    - Kui protsessorisse sisse ehitatud spetsiaalse registri (mode bit) väärtus on
-      - 1 -> on võimalik käivitada privileegrežiimi käsk
-      - 0 -> pole võimalik käivitada privileegrežiimi käsku
-  - Katkestused (interrupts)
+    - Protsessorisse sisse ehitatud spetsiaalne register (mode bit)
+      - Mode bit väärtus
+        - 1 -> on võimalik käivitada privileegrežiimi käsk
+        - 0 -> pole võimalik käivitada privileegrežiimi käsku
+  - Kuidas muuta mode-bit väärtust?
+    - Katkestused (interrupts)
 ]
 
 #slide[
@@ -202,7 +206,7 @@
 ]
 
 #slide[
-    == #problem[Kuidas pääsevad kasutajarežiimi protsessid ligi failidele, internetile...?]
+  == #problem[Kuidas pääsevad kasutajarežiimi protsessid ligi failidele, internetile...?]
   - Idee: Anda võimalus kasutajarežiimis töötavatele programmidele saada piiratud kujul ligipääs privileegrežiimi funktsionaalsustele
     - Kasutajaprotsessid saavad kutsuda ainult kindlaid funktsioone
       - Kindlad sisendid
@@ -366,7 +370,7 @@
   - Jõudluseprobleemid
     - Iga süsteemikutse sunnib protsessorit tegema kontekstivahetust
       - Süsteemikutsete optimeerimine
-          - Huvitav lugemine: https://bun.com/blog/behind-the-scenes-of-bun-install
+        - Huvitav lugemine: https://bun.com/blog/behind-the-scenes-of-bun-install
     - Sõltuvus konkreetsest platvormist
       - Erinevatel operatsioonisüsteemidel on erinevad süsteemikutsed
 ]
@@ -392,12 +396,8 @@
   - Kaks identset arvutit:
     - Üks Windows
     - Teine Linux
-  - Kas programm, mis kompileerub Windowsil kompileerub ka Linuxil?
+  - Kas Windowsil kompileeritud programm jookseb ka Linuxil?
   #only("2-")[- Ei. Aga miks, kui protsessor on sama?]
-  // - Lahendused:
-  //   - Võimalik konverteerida ühe platvormi süsteemikutsed teise omadeks
-  //     - Mõned projektid: Wine @WineHQRunWindows
-  //     - WSL (Window's subsystem for Linux v1)
 ]
 
 #slide[
@@ -419,29 +419,31 @@
 ]
 
 #slide[
-  == Kas programm, mis kompileerub macOS-il kompileerub ka Linuxil?
-  #only("2-")[- Üldiselt küll, miks?]
+  == Kas macOS-il kompileeritud programm töötab ka Linuxil?
+  #only("2-")[- Samuti ei: erinevad süsteemikutsed, failiformaat (Mach-O vs ELF)]
+  #only("3-")[- Aga lähtekood kompileerub Linuxil üldiselt ilma muudatusteta]
+  #only("4-")[- Miks? #sym.arrow POSIX]
 ]
 
 #slide[
   == POSIX
   - #strong[P]ortable #strong[O]perating #strong[S]ystem #strong[I]nterface
+  - "POSIX defines a standard operating system interface and environment, including a command interpreter (or "shell"), and common utility programs to support applications portability at the source code level." @BaseSpecificationsIssue
   - IEEE standard operatsioonisüsteemidele
     - Ühised funktsioonid
       - C funktsioonid: `open`, `read`
       - Käsurida ja tööriistad: `sh`, `ls`, `grep`
       - Failide õigused
-      ...
 ]
 
 #slide[
   == POSIX
-  - Lähtekoodi (C) tasemel leping
-    - Sama kood kompileerub Linuxil ja macOS-il
-    - NB! Kompileeritud programm töötab ainult ühel neist
-    - POSIXiga ühilduvad operatsioonisüsteemid:
-      - macOS, Linux, FreeBSD
-    - Windows ei ole POSIX ühilduv
+  - "Definitions for system service functions and subroutines, language-specific system services for the C programming language" @BaseSpecificationsIssue
+  - Sama kood kompileerub Linuxil ja macOS-il
+  - NB! Kompileeritud programm töötab ainult ühel neist
+  - POSIXiga ühilduvad operatsioonisüsteemid:
+    - macOS, Linux, FreeBSD
+  - Windows ei ole POSIX ühilduv
 ]
 
 #slide[
@@ -454,7 +456,7 @@
     table.header([*Kiht*], [*Mis jookseb kus*], [*Mida tõlgib*]),
     table.hline(),
     [Wine / Proton], [Windows → Linux], [Windowsi teegid (`kernel32.dll`, `ntdll.dll`)],
-    [WSL1], [Linux → Windows], [Linuxi süsteemikutsed Windowsi kernelis],
+    [WSL1], [Linux → Windows], [Linuxi süsteemikutsed Windowsis],
     [Darling], [macOS → Linux], [macOS-i teegid ja süsteemikutsed],
     [Cygwin / MSYS2], [POSIX → Windows], [POSIX funktsioonid Win32 peale (lähtekood)],
   )
