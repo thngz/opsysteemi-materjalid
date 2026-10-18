@@ -27,30 +27,54 @@
 ]
 
 #slide[
-  == Meeldetuletus: Operatsioonisüsteem kui orkestraator
+  == Mitmeprotsessilised süsteemid
+  #toolbox.side-by-side(columns: (auto, auto))[
+    - Näide: Arvutis on jooksmas kolm protsessi
+    - Protsessid soovivad ligipääsu
+      - Protsessorile
+      - Kõvakettale
+      - Mikrofonile
+      - Internetile
+      ...
+  ][
+    #figure(
+      image("./figure_no_os.png", height: 70%),
+    )
+  ]
+]
+
+#slide[
+  == #problem[Mis juhtub, kui protsessid saavad otsese ligipääsu riistvarale?]
+  - Üks protsessidest hõivab lõputu tsükliga protsessori
+  - Kaks protsessi kirjutavad samal ajal kettale
+  - Protsess kirjutab teisele protsessile või operatsioonisüsteemile eraldatud mälusse
+  - Protsess loeb teisele protsessile või operatsioonisüsteemile eraldatud mälust
+]
+
+#slide[
+  == Meeldetuletus: Operatsioonisüsteem kui dirigent
+  - Turvalise keskkonna tagamiseks
+    - Jagab operatsioonisüsteem riistvara ligipääsu protsessidele
+    - Kontrollib operatsioonisüsteem protsesside õiguseid teatud toiminguteks
+    - Isoleerib protsessid üksteisest
   #figure(
-    image("./figure1.png", height: 65%),
-    caption: "Erinevad protsessid soovivad ligipääsu erinevatele riistvara komponentidele",
+    image("figure_os_orchestrator_1.png", height: 55%),
+    caption: "Operatsioonisüsteem dirigeerib protsesside ligipääsu riistvarale",
   )
 ]
 
-#slide[
-  == Meeldetuletus: Operatsioonisüsteem kui orkestraator
-  - Operatsioonisüsteem jagab riistvara ligipääsu protsessidele
-  - Protsessid soovivad ligipääsu
-    - Protsessorile
-    - Kõvakettale
-    - Mikrofonile
-    - Internetile
-    ...
-]
 
 #slide[
-  == #problem[Kuidas takistada protsesse?]
-  - Protsessid võivad näiteks:
-    - Piirata teistel protsessidel riistvarale ligipääsu saamist
-    - Lugeda kõiki faile
-    - Sulgeda süsteemseid protsesse
+  == #problem[Mis takistab protsessil operatsioonisüsteemi ignoreerimast?]
+  #toolbox.side-by-side(columns: (1fr, auto))[
+    - Operatsioonisüsteem on programm
+    - Protsessor täidab lihtsalt käske
+  ][
+    #figure(
+      image("figure_fetch-execute-cycle.png", height: 65%),
+      caption: [Protsessori käsutsükkel @Basics2023]
+    )
+  ]
 ]
 
 #slide[
@@ -61,7 +85,7 @@
     - Privileegrežiim
       - Ligipääs laiemale hulgale käskudele (`cli`, `hlt`)
   - Tavalised protsessid saavad opereerida ainult kasutajarežiimis
-  - Võib-olla ka rohkem režiime!
+  - Võib olla ka rohkem režiime!
 ]
 
 #slide[
@@ -136,7 +160,7 @@
 ]
 
 #slide[
-  == #problem[Kuidas takistada suvalisi protsesse minemast privileegrežiimi?]
+  == #problem[Kuidas takistada kasutajarežiimi protsesse minemast privileegrežiimi?]
   - Riistvaraline lahendus
     - Kui protsessorisse sisse ehitatud spetsiaalse registri (mode bit) väärtus on
       - 1 -> on võimalik käivitada privileegrežiimi käsk
@@ -168,17 +192,17 @@
 ]
 
 #slide[
-  == Tarkvaraline lahendus
+  == Operatsioonisüsteemi roll privileegrežiimi kontrollimises
   - Katkestustäituri käskude täitmise ajal, seatakse mode-bit väärtus automaatselt 1
   - Katkestustäiturite aadressid ja käsud operatsioonisüsteemi kontrolli all
     - Tavalised protsessid ei saa muuta
       - Katkestustäiturite käske
-      - Aadresseid mälus
+      - Katkestustäiturite asukohta mälus
     - Säilib operatsioonisüsteemi kontroll privileegrežiimi üle
 ]
 
 #slide[
-  == #problem[Kuidas siis protsessid kasutaja protsessid üldse midagi teha saavad?]
+    == #problem[Kuidas pääsevad kasutajarežiimi protsessid ligi failidele, internetile...?]
   - Idee: Anda võimalus kasutajarežiimis töötavatele programmidele saada piiratud kujul ligipääs privileegrežiimi funktsionaalsustele
     - Kasutajaprotsessid saavad kutsuda ainult kindlaid funktsioone
       - Kindlad sisendid
@@ -329,8 +353,11 @@
 #slide[
   == Süsteemikutsete plussid
   - Riistvara on kasutajaprotsesside jaoks abstraheeritud
+    - Kiirendab rakendusearendaja tööd
+    - Programmid ei pea teadma konkreetsetest seadmetest arvutis
   - Turvalisus
-    - Kasutajaprotsessid ei saa oma suva järgi riistvarale ligi
+    - Kontrollitud viis, kuidas kasutajarežiimi protsessid saavad kasutada riistvara
+    - Vigane või pahatahtlik protsess ei saa süsteemi rikkuda
 ]
 
 #slide[
@@ -338,15 +365,26 @@
 
   - Jõudluseprobleemid
     - Iga süsteemikutse sunnib protsessorit tegema kontekstivahetust
+      - Süsteemikutsete optimeerimine
+          - Huvitav lugemine: https://bun.com/blog/behind-the-scenes-of-bun-install
     - Sõltuvus konkreetsest platvormist
-      - Erinevad platvormid võivad teha oma API
+      - Erinevatel operatsioonisüsteemidel on erinevad süsteemikutsed
 ]
 
 #slide[
-  #figure(
-    image("./figure6.png", height: 75%),
-    caption: "Operatsioonisüsteem kui orkestraator",
-  )
+  == Operatsioonisüsteem dirigendina
+  #set align(horizon)
+  #toolbox.side-by-side(columns: (1fr, auto, 1fr, auto, 2fr), gutter: 0.5em)[
+    #figure(image("figure_no_os.png", width: 100%))
+  ][
+    #text(size: 40pt)[→]
+  ][
+    #figure(image("figure_os_orchestrator_1.png", width: 100%))
+  ][
+    #text(size: 40pt)[→]
+  ][
+    #figure(image("figure_os_orchestrator_2.png", width: 100%))
+  ]
 ]
 
 #slide[
