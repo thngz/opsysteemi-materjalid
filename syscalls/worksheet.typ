@@ -21,7 +21,7 @@ Praktikumi eesmärgid:
       - Käivita käsureal: \ ```bash $ ps aux | head -20``` \
 
       - Kas protsessid, mille nimi on nurksulgudes (nt `[kthreadd]`), jooksevad privileegrežiimis või kasutajarežiimis? Põhjenda oma vastust.
-       \ Vihje: Väli VZX näitab, kas protsessile on kasutajarežiimis mälu eraldatud
+        \ Vihje: Väli VZX näitab, kas protsessile on kasutajarežiimis mälu eraldatud
     ][]
   + #question(points: 0.25)[
       - Loo C keele programm `unprivileged.c`, mille sisuks on:
@@ -78,6 +78,32 @@ Praktikumi eesmärgid:
 ]
 
 
-#section("Ülesanne - strace kasutus", points: true, number: true)[
+#section("Ülesanne - strace kasutamine protsesside süsteemikutsete nägemiseks", points: true, number: true)[
 
+  #callout("strace")[
+    `strace` on käsurea programm, mis jooksutab parameetriks antud programmi kuniks viimane seisma jääb. Käimise ajal kogub `strace` kokku kõik jälgitava programmi poolt tehtud süsteemikutsed ja kuvab need lõpus. Lisainfo `man strace`
+  ]
+
+  + #question(points: 0.5)[
+      - Loo C keele programm `hello.c`, mille sisuks on:
+        ```c
+        #include <stdio.h>
+        int main() {
+          printf("Tere\n");
+        }
+        ```
+
+      - Kompileeri see käsuga
+
+        `gcc hello.c -o hello`
+
+      - Käivita programm `strace`-ga
+
+        `strace ./hello`
+
+      - Leia süsteemikutse, mis vastutab teksti kuvamise eest ekraanile
+      - Mida tähendavad selle süsteemikutse kolm argumenti?
+      - Mida tähendab selle süsteemikutse tagastusväärtus?
+      - Kasuta abisaamiseks käsku `man 2 write`
+    ][]
 ]
