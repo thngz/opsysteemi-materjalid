@@ -106,4 +106,93 @@ Praktikumi eesmärgid:
       - Mida tähendab selle süsteemikutse tagastusväärtus?
       - Kasuta abisaamiseks käsku `man 2 write`
     ][]
+
+  + #question(points: 0.5)[
+      - Loo bash skript `test.sh`, mille sisuks on:
+        ```bash
+          echo tere > a.txt
+          strace -e trace=openat,read,write,close cat a.txt
+        ```
+
+      #callout("strace -e trace=...")[
+        `strace` lubab filtreerida erinevate süsteemikutsete vahel.
+        ```bash
+        strace -e trace=read ```
+
+        kuvab ainult `read` süsteemikutseid.
+
+        ```bash
+        strace -e trace=!read
+        ```
+
+        kuvab kõike *peale* `read` süsteemikutse.
+      ]
+
+      - Käivita see skript käsuga
+
+        `./test.sh`
+
+      - Mis on `openat` süsteemikutse tagastusväärtus?
+      - Kuidas kasutab seda väärtust `read` süsteemikutse?
+      - Kuidas kasutab seda väärtust `close` süsteemikutse?
+      - Millisesse failideskriptorisse kirjutab `write` süsteemikutse?
+    ][]
+
+  + #question(points: 0.5)[
+      - Loo järgnevad loengus näidatud C keele programmid: `write.c`, `printf.c`
+      ```c
+      // write.c
+      #include <unistd.h>
+      int main() {
+          int x = 42;
+          char buf[16];
+          int i = sizeof buf;
+
+          buf[--i] = '\n';
+          do {
+              buf[--i] = '0' + x % 10;
+              x /= 10;
+          } while (x > 0);
+
+          write(1, "Vastus: ", 8);
+          write(1, buf + i, sizeof buf - i);
+      }
+      ```
+      #line(length: 100%)
+      ```c
+      // printf.c
+      #include <stdio.h>
+
+      int main(void) {
+          int x = 42;
+          printf("Vastus: %d\n", x);
+      }
+      ```
+
+      - Kompileeri need programmid kasutades:
+        - `gcc ./write.c -o write` (ignoreeri ridu _warning_)
+        - `gcc ./printf.c -o printf`
+
+      - Jooksuta need programmid `strace` abiga:
+        - `strace -e trace=write ./write`
+        - `strace -e trace=write ./printf`
+
+      - Kas `printf` C funktsioon on süsteemikutse või standardteegi funktsioon?
+      - Asenda `write.c` failis
+      rida
+      ```c
+      write(1, "Vastus: ", 8);
+      ```
+
+      reaga
+      ```c
+      write(1, "Vastus: ", 6);
+      ```
+      - Mis muutus? Miks?
+      - Miks programmerijad eelistavad standardteegi funktsioone üle otsese süsteemikutsete kasutamise?
+    ][]
+
 ]
+
+
+
