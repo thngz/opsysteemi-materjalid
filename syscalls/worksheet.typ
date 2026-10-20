@@ -8,7 +8,7 @@
   assignment: "Praktikum",
   title: "Süsteemikutsed (system calls)",
 )
-Vormista vastus *PDF* formaadis failina ja lae Moodle'sse hiljemalt *2026-11-02, 23:59*
+Vormista vastus *PDF* formaadis failina ja lae Moodle'sse hiljemalt *2026-11-02 23:59*
 
 == NB! praktikumis kasutatavad käsud nõuavad Linux keskkonda
 
@@ -17,13 +17,13 @@ Praktikumi eesmärgid:
 - Analüüsida `strace` käsu abil protsesside tehtavaid süsteemikutseid
 
 #section("Ülesanne - Privileegrežiim ja kasutajarežiim", points: true, number: true)[
-  + #question(points: 0.25)[
+  + #question(points: 0.5)[
       - Käivita käsureal: \ ```bash $ ps aux | head -20``` \
 
       - Kas protsessid, mille nimi on nurksulgudes (nt `[kthreadd]`), jooksevad privileegrežiimis või kasutajarežiimis? Põhjenda oma vastust.
         \ Vihje: Väli VZX näitab, kas protsessile on kasutajarežiimis mälu eraldatud
     ][]
-  + #question(points: 0.25)[
+  + #question(points: 0.5)[
       - Loo C keele programm `unprivileged.c`, mille sisuks on:
       ```c
         int main() {
@@ -190,6 +190,29 @@ Praktikumi eesmärgid:
       ```
       - Mis muutus? Miks?
       - Miks programmerijad eelistavad standardteegi funktsioone üle otsese süsteemikutsete kasutamise?
+    ][]
+
+  + #question(points: 0.5)[
+      Jooksuta käsk
+
+      ```bash strace -e trace=openat cat /etc/shadow ```
+
+      - Mis on `openat` süsteemikutse väljund `/etc/shadow` puhul?
+      - Kas viga tuleb `cat` käsu või operatsioonisüsteemi poolt? Selgita.
+    ][]
+
+  + #question(points: 0.5)[
+      - Jooksuta käsureal järgnevad käsud:
+
+        `strace -c dd if=/dev/zero of=/dev/null bs=1 count=1000000`
+
+        `strace -c dd if=/dev/zero of=/dev/null bs=1000000 count=1`
+      - Mõlemad käsud kopeerivad ühepalju andmeid. Mitu `read` ja `write` süsteemikutset kummalgi juhul tehti? Kumb oli kiirem? Miks?
+      
+
+      #callout("strace -c")[
+        `strace -c` loendab tehtud süsteemikutsete kogused ja nendele kuluva aja (privileegrežiimis) ning tagastab nende kohta ülevaate.
+      ]
     ][]
 
 ]
